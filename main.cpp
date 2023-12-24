@@ -46,6 +46,51 @@ void modelPickerWidget(std::string title, std::string* path, Model*& model) {
 	}
 }
 
+void floatPicker(GLfloat* val, std::string label, std::string nameSpace) {
+	ImGui::Text(label.c_str());
+	ImGui::DragFloat(("##" + nameSpace).c_str(), val);
+}
+
+void vectorPicker(glm::vec3* vec, std::string label, std::string nameSpace) {
+	ImGui::Text(label.c_str());
+	ImGui::DragFloat(("X##"+label+nameSpace).c_str(), &(vec->x));
+	ImGui::DragFloat(("Y##" + label + nameSpace).c_str(), &(vec->y));
+	ImGui::DragFloat(("Z##" + label + nameSpace).c_str(), &(vec->z));
+}
+
+
+void pointSourceEditor(GLfloat* intensity, glm::vec3* pos) {
+	if (ImGui::CollapsingHeader("Point source")) {
+		floatPicker(intensity, "Intensity", "pointSource");
+		vectorPicker(pos, "Position", "pointSource");
+	}
+}
+
+void directionalSourceEditor(GLfloat* intensity, glm::vec3* direction) {
+	if (ImGui::CollapsingHeader("Directional source")) {
+		floatPicker(intensity, "Intensity", "directionalSource");
+		vectorPicker(direction, "Direction", "directionalSource");
+	}
+}
+
+void spotlightSourceEditor(GLfloat* intensity, glm::vec3* pos, glm::vec3* direction, GLfloat* cone) {
+	if (ImGui::CollapsingHeader("Spotlight source")) {
+		floatPicker(intensity, "Direction", "spotlightSource");
+		vectorPicker(pos, "Position", "spotlightSource");
+		vectorPicker(direction, "Direction", "spotlightSource");
+		floatPicker(cone, "Cone", "spotlightSource");
+	}
+}
+
+void shadingPicker(std::string title, int* picked) {
+	if (ImGui::CollapsingHeader(title.c_str())) {
+		ImGui::RadioButton(("Phong##" + title).c_str(), picked, Shading::Phong);
+		ImGui::RadioButton(("Toon##" + title).c_str(), picked, Shading::Toon);
+		ImGui::RadioButton(("Other##" + title).c_str(), picked, Shading::Other);
+	}
+}
+
+
 int main() {
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Lab 13", sf::Style::Default, sf::ContextSettings(24));
 	window.setFramerateLimit(60);
@@ -72,6 +117,9 @@ int main() {
 	sf::Vector2i centerWindow;
 
 	if (!ImGui::SFML::Init(window)) return -1;
+
+	int shade1 = Shading::Phong;
+	int shade2 = Shading::Toon;
 
 	sf::Clock deltaClock;
 	while (window.isOpen()) {
@@ -126,7 +174,15 @@ int main() {
 
 
 		ImGui::Begin("Lab 14");
-		modelPickerWidget("Pick central model", &painter.state.centralPath, painter.state.test);
+
+		pointSourceEditor(&state.pointSource.intensity, &state.pointSource.pos);
+		directionalSourceEditor(&state.directionalSource.intensity, &state.directionalSource.direction);
+		spotlightSourceEditor(&state.spotlightSource.intensity, &state.spotlightSource.pos, &state.spotlightSource.direction, &state.spotlightSource.cone);
+
+		shadingPicker("Cossak", &state.shadings["Cossak"]);
+		shadingPicker("LizardMK1", &state.shadings["LizardMK1"]);
+
+		modelPickerWidget("Pick central model", &painter.state.path, painter.state.test);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
