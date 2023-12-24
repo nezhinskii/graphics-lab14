@@ -1,0 +1,207 @@
+root ground: 1.5 -3 1.5 0 -0.08399998 0 1 1 1
+root hips: 0 70.5 10.5 0 -0.137 0 1 1 1
+spine lower: -0.5 -17.5 -13 0 0 0 1 1 1
+spine middle a: 0 0 2.5 0 0 0 1 1 1
+spine middle b: 0 1.5 -3.5 0 0 0 1 1 1
+spine upper: 0 0 0 0 0 0 1 1 1
+head neck lower: 15 -2.5 14 0 0 0 1 1 1
+head neck upper: 3.5 -5.5 -11.5 0 0 0 1 1 1
+head lip upper root left: -6.5 0 12.5 0 0 0 1 1 1
+head lip upper left 1b: 0 0 0 0 0 0 1 1 1
+head lip upper left 1a: 0 0 0 0 0 0 1 1 1
+head lip upper left 2b: 0 0 0 0 0 0 1 1 1
+head lip upper left 2a: 0 0 0 0 0 0 1 1 1
+head cheek lower root left: 0 0 0 0 0 0 1 1 1
+head cheek left lower 4: 0 0 0 0 0 0 1 1 1
+head cheek left lower 2: 0 0 0 0 0 0 1 1 1
+head cheek left lower 3: 0 0 0 0 0 0 1 1 1
+head eyebrow root left: 0 0 0 0 0 0 1 1 1
+head eyebrow left 1: 0 0 0 0 0 0 1 1 1
+head eyebrow left 2: 0 0 0 0 0 0 1 1 1
+head eyebrow left 3: 0 0 0 0 0 0 1 1 1
+head cheek upper 2 root left: 0 0 0 0 0 0 1 1 1
+head cheek left upper 4: 0 0 0 0 0 0 1 1 1
+head cheek left upper 5: 0 0 0 0 0 0 1 1 1
+head cheek left upper 2: 0 0 0 0 0 0 1 1 1
+head forehead upper root left: 0 0 0 0 0 0 1 1 1
+head forehead left 1: 0 0 0 0 0 0 1 1 1
+head forehead left 2: 0 0 0 0 0 0 1 1 1
+head forehead left 3: 0 0 0 0 0 0 1 1 1
+head cheek upper 1 root left: 0 0 0 0 0 0 1 1 1
+head cheek left upper 3: 0 0 0 0 0 0 1 1 1
+head cheek left upper 6: 0 0 0 0 0 0 1 1 1
+head cheek left upper 1: 0 0 0 0 0 0 1 1 1
+head lip upper root right: -9 0 -12 0 0 0 1 1 1
+head lip upper right 1b: 0 0 0 0 0 0 1 1 1
+head lip upper right 1a: 0 0 0 0 0 0 1 1 1
+head lip upper right 2b: 0 0 0 0 0 0 1 1 1
+head lip upper right 2a: 0 0 0 0 0 0 1 1 1
+head cheek lower root right: 0 0 0 0 0 0 1 1 1
+head cheek right lower 4: 0 0 0 0 0 0 1 1 1
+head cheek right lower 2: 0 0 0 0 0 0 1 1 1
+head cheek right lower 3: 0 0 0 0 0 0 1 1 1
+head eyebrow root right: 0 0 0 0 0 0 1 1 1
+head eyebrow right 1: 0 0 0 0 0 0 1 1 1
+head eyebrow right 2: 0 0 0 0 0 0 1 1 1
+head eyebrow right 3: 0 0 0 0 0 0 1 1 1
+head cheek upper 2 root right: 0 0 0 0 0 0 1 1 1
+head cheek right upper 4: 0 0 0 0 0 0 1 1 1
+head cheek right upper 5: 0 0 0 0 0 0 1 1 1
+head cheek right upper 2: 0 0 0 0 0 0 1 1 1
+head forehead upper root right: 0 0 0 0 0 0 1 1 1
+head forehead right 1: 0 0 0 0 0 0 1 1 1
+head forehead right 2: 0 0 0 0 0 0 1 1 1
+head forehead right 3: 0 0 0 0 0 0 1 1 1
+head cheek upper 1 root right: 0 0 0 0 0 0 1 1 1
+head cheek right upper 3: 0 0 0 0 0 0 1 1 1
+head cheek right upper 6: 0 0 0 0 0 0 1 1 1
+head cheek right upper 1: 0 0 0 0 0 0 1 1 1
+head forehead middle: 0 0 0 0 0 0 1 1 1
+head eyebrow middle: 0 0 0 0 0 0 1 1 1
+head nose bridge: 0 0 0 0 0 0 1 1 1
+head nose tip: 0 0 0 0 0 0 1 1 1
+head lip upper middle b: 0 0 0 0 0 0 1 1 1
+head lip upper middle a: 0 0 0 0 0 0 1 1 1
+head jaw: 12.5 0 0 0 0 0 1 1 1
+head mouth corner both ctrl: -25 0 0 0 0 0 1 1 1
+head mouth corner root left: 0 0 0 0 0 0 1 1 1
+head cheek left lower 1: 0 0 0 0 0 0 1 1 1
+head mouth corner left: 0 0 0 0 0 0 1 1 1
+head mouth corner root right: 0 0 0 0 0 0 1 1 1
+head cheek right lower 1: 0 0 0 0 0 0 1 1 1
+head mouth corner right: 0 0 0 0 0 0 1 1 1
+head lip lower root left: 0 0 -6 0 0 0 1 1 1
+head lip lower left 1b: 0 0 0 0 0 0 1 1 1
+head lip lower left 1a: 0 0 0 0 0 0 1 1 1
+head lip lower left 2b: 0 0 0 0 0 0 1 1 1
+head lip lower left 2a: 0 0 0 0 0 0 1 1 1
+head lip lower root right: 0 0 3 0 0 0 1 1 1
+head lip lower right 1b: 0 0 0 0 0 0 1 1 1
+head lip lower right 1a: 0 0 0 0 0 0 1 1 1
+head lip lower right 2b: 0 0 0 0 0 0 1 1 1
+head lip lower right 2a: 0 0 0 0 0 0 1 1 1
+head lip lower middle b: 0 0 0 0 0 0 1 1 1
+head lip lower middle a: 0 0 0 0 0 0 1 1 1
+head chin left: 0 0 0 0 0 0 1 1 1
+head chin right: 0 0 0 0 0 0 1 1 1
+head tongue 1: 0 0 0 0 0 0 1 1 1
+head tongue 2: 0 0 0 0 0 0 1 1 1
+head teeth lower: 0 0 0 0 0 0 1 1 1
+head eyeball left: 0 -8.5 0 0 0 0 1 1 1
+head eyeball right: -13 -28.5 0 0 0 0 1 1 1
+head nostril left: 0 0 0 0 0 0 1 1 1
+head nostril right: 0 0 0 0 0 0 1 1 1
+head teeth upper: 0 0 0 0 0 0 1 1 1
+head eyelid left upper root: 0 0 0 0 0 0 1 1 1
+head eyelid left upper 1: 0 0 0 0 0 0 1 1 1
+head eyelid left upper 2: 0 0 0 0 0 0 1 1 1
+head eyelid right lower root: -11.5 0 0 0 0 0 1 1 1
+head eyelid right lower 1: 0 0 0 0 0 0 1 1 1
+head eyelid right lower 2: 0 0 0 0 0 0 1 1 1
+head eyelid left lower root: -8 0 0 0 0 0 1 1 1
+head eyelid left lower 1: 0 0 0 0 0 0 1 1 1
+head eyelid left lower 2: 0 0 0 0 0 0 1 1 1
+head eyelid right upper root: 0 0 0 0 0 0 1 1 1
+head eyelid right upper 1: 0 0 0 0 0 0 1 1 1
+head eyelid right upper 2: 0 0 0 0 0 0 1 1 1
+head mask root: 0 0 0 0 0 0 1 1 1
+arm left shoulder 1: 0 0 0 0 0 0 1 1 1
+arm left shoulder 2: 8 0 -26 0 0 0 1 1 1
+arm left shoulder roll: 0 0 0 0 0 0 1 1 1
+arm left elbow: -24.5 -52.5 -25.5 0 0 0 1 1 1
+arm left elbow roll: 0 0 0 0 0 0 1 1 1
+arm left wrist: 30.5 0 -5.5 0 0 0 1 1 1
+arm left finger 2a: 0 0 0 0 0 0 1 1 1
+arm left finger 2b: 27 -14.5 -4 0 0 0 1 1 1
+arm left finger 2c: 0 0 0 0 0 0 1 1 1
+arm left finger 3a: 0 0 0 0 0 0 1 1 1
+arm left finger 3b: 20.5 -19.5 -52.5 0 0 0 1 1 1
+arm left finger 3c: 0 0 0 0 0 0 1 1 1
+arm left finger base: 0 0 0 0 0 0 1 1 1
+arm left finger 4a: 0 0 0 0 0 0 1 1 1
+arm left finger 4b: 11 -11.5 -83 0 0 0 1 1 1
+arm left finger 4c: 0 0 0 0 0 0 1 1 1
+arm left finger 5a: 0 0 0 0 0 0 1 1 1
+arm left finger 5b: 3 0 -83 0 0 0 1 1 1
+arm left finger 5c: 0 0 0 0 0 0 1 1 1
+arm left finger 1a: 0 0 0 0 0 0 1 1 1
+arm left finger 1b: 28.5 9 14 0 0 0 1 1 1
+arm left finger 1c: 0 0 0 0 0 0 1 1 1
+arm left wrist adj: 0 0 0 0 0 0 1 1 1
+arm left elbow adj 4: 0 0 0 0 0 0 1 1 1
+arm left elbow adj 1: 0 0 0 0 0 0 1 1 1
+arm left elbow adj 2: 0 0 0 0 0 0 1 1 1
+arm left elbow adj 3: 0 0 0 0 0 0 1 1 1
+arm left shoulder adj 2: 0 0 0 0 0 0 1 1 1
+arm left shoulder adj 1: 0 0 0 0 0 0 1 1 1
+arm right shoulder 1: 0 -11 6 0 0 0 1 1 1
+arm right shoulder 2: 26 -30 12.5 0 0 0 1 1 1
+arm right shoulder roll: 0 0 0 0 0 0 1 1 1
+arm right elbow: 0 0 0 0 0 0 1 1 1
+arm right elbow roll: 0 0 0 0 0 0 1 1 1
+arm right wrist: 1.5 19 11.5 0 0 0 1 1 1
+arm right finger 2a: 6 -8 0 0 0 0 1 1 1
+arm right finger 2b: 11 20 20.5 0 0 0 1 1 1
+arm right finger 2c: -2 3 61.5 0 0 0 1 1 1
+arm right finger 3a: 0 0 0 0 0 0 1 1 1
+arm right finger 3b: 2 12 79 0 0 0 1 1 1
+arm right finger 3c: 0 0 12 0 0 0 1 1 1
+arm right finger base: 0 0 0 0 0 0 1 1 1
+arm right finger 4a: 0 0 0 0 0 0 1 1 1
+arm right finger 4b: 0 0 80 0 0 0 1 1 1
+arm right finger 4c: 0 0 37.5 0 0 0 1 1 1
+arm right finger 5a: 0 0 0 0 0 0 1 1 1
+arm right finger 5b: 0 0 74.5 0 0 0 1 1 1
+arm right finger 5c: 0 0 42.5 0 0 0 1 1 1
+arm right finger 1a: 0 0 0 0 0 0 1 1 1
+arm right finger 1b: 17.5 -0.5 -26.5 0 0 0 1 1 1
+arm right finger 1c: 0 0 0 0 0 0 1 1 1
+arm right wrist adj: 0 0 0 0 0 0 1 1 1
+arm right elbow adj 4: 0 0 0 0 0 0 1 1 1
+arm right elbow adj 1: 0 0 0 0 0 0 1 1 1
+arm right elbow adj 2: 0 0 0 0 0 0 1 1 1
+arm right elbow adj 3: 0 0 0 0 0 0 1 1 1
+arm right shoulder adj 2: 0 0 0 0 0 0 1 1 1
+arm right shoulder adj 1: 0 0 0 0 0 0 1 1 1
+pelvis: 8.5 0 0 0 0 0 1 1 1
+leg left thigh: -34.5 0 0 0 0 0 1 1 1
+leg left thigh roll: 0 0 0 0 0 0 1 1 1
+leg left knee: 60 0 0 0 0 0 1 1 1
+leg left knee roll: 0 0 0 0 0 0 1 1 1
+leg left ankle: -32 0 -11 0 0 0 1 1 1
+leg left toes: 0 0 0 0 0 0 1 1 1
+leg left knee adj: 0 0 0 0 0 0 1 1 1
+leg right thigh: -27 -30.5 -26 0 0 0 1 1 1
+leg right thigh roll: 0 0 0 0 0 0 1 1 1
+leg right knee: 63.5 0 0 0 0 0 1 1 1
+leg right knee roll: 0 0 0 0 0 0 1 1 1
+leg right ankle: -20.5 -5.5 19.5 0 0 0 1 1 1
+leg right toes: -22 0 0 0 0 0 1 1 1
+leg right knee adj: 0 0 0 0 0 0 1 1 1
+cloth back left 1: 0 0 0 0 0 0 1 1 1
+cloth back left 2: 0 0 0.5 0 0 0 1 1 1
+cloth back left 3: 0 0 -15 0 0 0 1 1 1
+cloth back left 4: 0 0 0 0 0 0 1 1 1
+cloth back middle 1: 0 0 -1 0 0 0 1 1 1
+cloth back middle 2: 0 0 -9.5 0 0 0 1 1 1
+cloth back middle 3: 0 0 -3 0 0 0 1 1 1
+cloth back middle 4: 0 0 0 0 0 0 1 1 1
+cloth back right 1: 0 0 0 0 0 0 1 1 1
+cloth back right 2: 0 0 -5.5 0 0 0 1 1 1
+cloth back right 3: 0 0 -11.5 0 0 0 1 1 1
+cloth back right 4: 0 0 0 0 0 0 1 1 1
+cloth front right 1: 0 0 -29.5 0 0 0 1 1 1
+cloth front right 2: 9 -17.5 18.5 0 0 0 1 1 1
+cloth front right 3: 13 0 -10 0 0 0 1 1 1
+cloth front right 4: 7.5 0 0 0 0 0 1 1 1
+cloth front right 5: 0 0 0 0 0 0 1 1 1
+cloth front middle 1: 0 0 -23.5 0 0 0 1 1 1
+cloth front middle 2: 0 0 0 0 0 0 1 1 1
+cloth front middle 3: 13 0 13 0 0 0 1 1 1
+cloth front middle 4: 7.5 0 0 0 0 0 1 1 1
+cloth front middle 5: 0 0 0 0 0 0 1 1 1
+cloth front left 1: 0 0 -19 0 0 0 1 1 1
+cloth front left 2: 0 0 0 0 0 0 1 1 1
+cloth front left 3: 9 0 5 0 0 0 1 1 1
+cloth front left 4: 9 0 0 0 0 0 1 1 1
+cloth front left 5: 0 0 0 0 0 0 1 1 1

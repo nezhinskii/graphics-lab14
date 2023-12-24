@@ -10,6 +10,12 @@ public:
 	std::string centralPath = "";
 	std::string satellitePath = "";
 	Camera camera;
-	Model* centralModel = nullptr;
-	Model* satelliteModel = nullptr;
+	Model* platform = nullptr;
+	Model* lizardMk = nullptr;
+	Model* kazak = nullptr;
+	Model* gun = nullptr;
+	Model* table = nullptr;
+	Model* coffee = nullptr;
+
+	Model* test = nullptr;
 };

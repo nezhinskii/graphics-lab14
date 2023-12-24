@@ -14,7 +14,7 @@ public:
         worldUp(up),
         yaw(-90.0f),
         pitch(0.0f),
-        speed(0.2f),
+        speed(0.1f),
         sensitivity(0.05f),
         fov(45),
         aspectRatio(aspectRatio),

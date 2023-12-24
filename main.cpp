@@ -15,18 +15,21 @@
 #include "painter.h"
 #include "lib/ImGuiFileDialog/ImGuiFileDialog.h"
 #include "painter_state.h"
+#include<filesystem>
 
 using namespace sf;
 
 void modelPickerWidget(std::string title, std::string* path, Model*& model) {
 	if (ImGui::Button(title.c_str()))
-		ImGuiFileDialog::Instance()->OpenDialog(title.c_str(), "Choose object", ".obj", ".");
+		ImGuiFileDialog::Instance()->OpenDialog(title.c_str(), "Choose object", ".obj,.fbx,.gltf,.gitf", ".");
 	if ((*path).empty()) {
 		ImGui::Text("Empty");
 	}
 	else {
 		ImGui::Text((*path).c_str());
 	}
+
+
 
 	if (ImGuiFileDialog::Instance()->Display(title.c_str()))
 	{
@@ -48,12 +51,20 @@ int main() {
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 	window.setActive(true);
+	std::filesystem::path currentPath = std::filesystem::current_path();
 
-	Camera camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f), 1.0f);
+	Camera camera = Camera(glm::vec3(0.0f, 2.0f, 8.0f), 1.0f);
 	auto state = PainterState(camera);
 	auto painter = Painter(state);
 
 	painter.Init();
+	painter.state.platform = new Model(currentPath.string() + "\\platform\\scene.gltf");
+	painter.state.kazak = new Model(currentPath.string() + "\\kazak\\scene.gltf");
+	painter.state.lizardMk = new Model(currentPath.string() + "\\lizard_detailed\\reptile.obj");
+	painter.state.gun = new Model(currentPath.string() + "\\gun\\Gun.obj");
+	painter.state.table = new Model(currentPath.string() + "\\table\\scene.gltf");
+	painter.state.coffee = new Model(currentPath.string() + "\\coffee\\scene.gltf");
+
 	GLboolean firstMouse = true;
 	GLfloat lastX = 0, lastY = 0;
 	sf::Clock clock;
@@ -114,9 +125,8 @@ int main() {
 		ImGui::SFML::Update(window, deltaClock.restart());
 
 
-		ImGui::Begin("Lab 13");
-		modelPickerWidget("Pick central model", &painter.state.centralPath, painter.state.centralModel);
-		modelPickerWidget("Pick satellite model", &painter.state.satellitePath, painter.state.satelliteModel);
+		ImGui::Begin("Lab 14");
+		modelPickerWidget("Pick central model", &painter.state.centralPath, painter.state.test);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

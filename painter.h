@@ -12,6 +12,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include<filesystem>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -97,6 +102,19 @@ class Painter {
 		)"
 	};
 
+	std::string get_file_contents(const char* filename)
+	{
+		std::ifstream file(filename);
+
+		if (!file.is_open()) {
+			std::cerr << "Error opening file: " << filename << std::endl;
+			return ""; 
+		}
+
+		std::stringstream buffer;
+		buffer << file.rdbuf();
+		return buffer.str();
+	}
 
 	void ShaderLog(unsigned int shader)
 	{
@@ -148,6 +166,48 @@ class Painter {
 		}
 	}
 
+	/*void InitShader() {
+		GLuint vShaders[shadersNumber];
+		std::filesystem::path currentPath = std::filesystem::current_path();
+		std::cout << "Current Path: " << currentPath.string() << std::endl;
+
+		std::string  vertShaderText = get_file_contents((currentPath.string() + "\\shaders\\shader.vert").c_str());
+		const char* vertShader = vertShaderText.c_str();
+		for (int i = 0; i < shadersNumber; i++) {
+			vShaders[i] = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vShaders[i], 1, &vertShader, NULL);
+
+			glCompileShader(vShaders[i]);
+			std::cout << "vertex shader" << i << std::endl;
+			ShaderLog(vShaders[i]);
+		}
+
+		GLuint fShaders[shadersNumber];
+		std::string  fragShaderText = get_file_contents((currentPath.string() + "\\shaders\\shader.frag").c_str());
+		const char* fragShader = vertShaderText.c_str();
+		for (int i = 0; i < shadersNumber; i++) {
+			fShaders[i] = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fShaders[i], 1, &fragShader, NULL);
+			glCompileShader(fShaders[i]);
+			std::cout << "fragment shader" << i << std::endl;
+			ShaderLog(fShaders[i]);
+		}
+
+
+		for (int i = 0; i < shadersNumber; i++) {
+			Programs[i] = glCreateProgram();
+			glAttachShader(Programs[i], vShaders[i]);
+			glAttachShader(Programs[i], fShaders[i]);
+			glLinkProgram(Programs[i]);
+			int link_ok;
+			glGetProgramiv(Programs[i], GL_LINK_STATUS, &link_ok);
+			if (!link_ok) {
+				std::cout << "error attach shaders \n";
+				return;
+			}
+		}
+	}*/
+
 	void ReleaseShader() {
 		glUseProgram(0);
 		for (int i = 0; i < shadersNumber; i++) {
@@ -174,29 +234,54 @@ public:
 	void Draw() {
 		glEnable(GL_DEPTH_TEST);
 		glUseProgram(Programs[0]);
-		yAngle += 0.005;
-		baseOrbitDeegre += 1;
-		glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f));
-		rotationMatrix = glm::rotate(glm::mat4(1.0f), yAngle, glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 centralModel = scaleMatrix * rotationMatrix * glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f));
-		if (state.centralModel != nullptr) {
-			(state.centralModel->Draw(Programs[0], centralModel, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
-		}
-		glm::vec3 satelitePosition(orbitRadius, 0.0f, 0.0f);
-		if (state.satelliteModel != nullptr) {
-			glm::vec3 position(orbitRadius, 0.0f, 0.0f);
-			GLfloat deegreeStep = 360 / sateliteNum;
-
-			for (int i = 0; i < sateliteNum; ++i)
-			{
-				glm::mat4 sateliteModel = scaleMatrix * rotationMatrix * glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f));
-				glm::mat4 orbitMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(baseOrbitDeegre + i * deegreeStep), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 translateMatrix = glm::translate(glm::mat4(1.0f), position);
-				sateliteModel = orbitMatrix * translateMatrix * sateliteModel;
-				(state.satelliteModel->Draw(Programs[0], sateliteModel, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
-			}
+		
+		if (state.platform != nullptr) {
+			glm::mat4 platformMat = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f));
+			(state.platform->Draw(Programs[0], platformMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
 		}
 
+		if (state.lizardMk != nullptr) {
+			glm::mat4 lizardMkMat = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 0.15f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(15), glm::vec3(0.0f, 1.0f, 0.0f));
+			(state.lizardMk->Draw(Programs[0], lizardMkMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
+
+		if (state.kazak != nullptr) {
+			glm::mat4 kazakMat = 
+				glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 1.2f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(0.0f, -1.0f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f)) 
+				* glm::scale(glm::mat4(1.0f), glm::vec3(0.28f));
+			(state.kazak->Draw(Programs[0], kazakMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
+
+		if (state.gun != nullptr) {
+			glm::mat4 gunMat = glm::translate(glm::mat4(1.0f), glm::vec3(-2.53f, 0.89f, 0.40f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(-18), glm::vec3(1.0f, 0.0f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(-15), glm::vec3(0.0f, 1.0f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(60), glm::vec3(0.0f, 0.0f, 1.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(180), glm::vec3(-1.0f, 0.0f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(0.70f));
+			(state.gun->Draw(Programs[0], gunMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
+
+		if (state.table != nullptr) {
+			glm::mat4 tableMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.17f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f));
+			(state.table->Draw(Programs[0], tableMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
+
+		if (state.coffee != nullptr) {
+			glm::mat4 coffeeMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.15f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(0.003f));
+			(state.coffee->Draw(Programs[0], coffeeMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
+
+		if (state.test != nullptr) {
+			glm::mat4 testMat = glm::mat4(1.0f);
+			(state.test->Draw(Programs[0], testMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+		}
 		glUseProgram(0);
 	}
 

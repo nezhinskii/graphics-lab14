@@ -30,7 +30,7 @@ struct ObjVertex {
 	{}
 };
 
-class Model {
+class Mesh {
 	std::vector<ObjVertex> vertices;
 	std::vector<GLuint> indices;
 	std::vector<GLuint> textures;
@@ -84,47 +84,32 @@ class Model {
 public:
 	GLuint VAO;
 
-	Model(const std::string& path) {
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			std::cerr << "Error loading model: " << importer.GetErrorString() << std::endl;
-			return;
-		}
-
-		std::string modelDirectory = path;
-		modelDirectory = modelDirectory.substr(0, modelDirectory.find_last_of('\\'));
-
-		for (GLuint i = 0; i < scene->mNumMeshes; ++i) {
-			aiMesh* mesh = scene->mMeshes[i];
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
-			for (GLuint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j) {
-				aiTextureType textureType = static_cast<aiTextureType>(j);
-				aiString texturePath;
-				if (material->GetTexture(textureType, 0, &texturePath) == AI_SUCCESS) {
-					std::string fullPath = modelDirectory + '\\' + texturePath.C_Str();
-					GLuint textureID;
-					loadTexture(fullPath.c_str(), textureID);
-					textures.push_back(textureID);
-				}
+	Mesh(aiMesh* mesh, aiMaterial*  material, const std::string& modelDirectory) {
+		material->mProperties;
+		for (GLuint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j) {
+			aiTextureType textureType = static_cast<aiTextureType>(j);
+			aiString texturePath;
+			if (material->GetTexture(textureType, 0, &texturePath) == AI_SUCCESS) {
+				std::string fullPath = modelDirectory + '\\' + texturePath.C_Str();
+				GLuint textureID;
+				loadTexture(fullPath.c_str(), textureID);
+				textures.push_back(textureID);
 			}
+		}
 			
-			for (GLuint i = 0; i < mesh->mNumVertices; ++i) {
-				ObjVertex vertex(mesh->mVertices[i], mesh->mTextureCoords[0][i]);
-				vertices.push_back(vertex);
-			}
-
-			for (unsigned int j = 0; j < mesh->mNumFaces; ++j) {
-				aiFace face = mesh->mFaces[j];
-				for (unsigned int k = 0; k < face.mNumIndices; ++k) {
-					indices.push_back(face.mIndices[k]);
-				}
-			}
-
-			setupBuffers();
+		for (GLuint i = 0; i < mesh->mNumVertices; ++i) {
+			ObjVertex vertex(mesh->mVertices[i], mesh->mTextureCoords[0][i]);
+			vertices.push_back(vertex);
 		}
+
+		for (unsigned int j = 0; j < mesh->mNumFaces; ++j) {
+			aiFace face = mesh->mFaces[j];
+			for (unsigned int k = 0; k < face.mNumIndices; ++k) {
+				indices.push_back(face.mIndices[k]);
+			}
+		}
+
+		setupBuffers();
 	}
 
 
@@ -146,5 +131,33 @@ public:
 
 		glBindVertexArray(0);
 		glActiveTexture(GL_TEXTURE0);
+	}
+};
+
+class Model {
+	std::vector<Mesh> meshes;
+public:
+	Model(const std::string& path) {
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+			std::cerr << "Error loading model: " << importer.GetErrorString() << std::endl;
+			return;
+		}
+
+		std::string modelDirectory = path;
+		modelDirectory = modelDirectory.substr(0, modelDirectory.find_last_of('\\'));
+
+		for (GLuint i = 0; i < scene->mNumMeshes; ++i) {
+			Mesh mesh(scene->mMeshes[i], scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], modelDirectory);
+			meshes.push_back(mesh);
+		}
+	}
+
+	void Draw(const GLuint& shaderId, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
+		for (int i = 0; i < meshes.size(); ++i) {
+			meshes[i].Draw(shaderId, model, view, projection);
+		}
 	}
 };

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Kazak
+* source:	https://sketchfab.com/3d-models/kazak-6457e92ee84f473099e839f903101f1b
+* author:	Michael Kriat (https://sketchfab.com/2x2bit)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Kazak" (https://sketchfab.com/3d-models/kazak-6457e92ee84f473099e839f903101f1b) by Michael Kriat (https://sketchfab.com/2x2bit) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
