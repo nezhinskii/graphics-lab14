@@ -21,6 +21,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 using namespace sf;
 
@@ -31,89 +35,26 @@ class Painter {
 	const static GLuint shadersNumber = 1;
 
 	const char* VertexShaderSource[shadersNumber] = {
-		R"(
-		#version 330 core
-
-		layout (location = 0) in vec3 position;
-		layout (location = 1) in vec2 texCoord;
-
-		out vec2 textureCoord;
-
-		uniform mat4 model;
-		uniform mat4 view;
-		uniform mat4 projection;
-
-		void main() {
-			gl_Position = projection * view * model * vec4(position, 1.0);
-			textureCoord = texCoord;
-		}
-		)"
 	};
 
 	const char* FragShaderSources[shadersNumber] = {
-		R"(
-		#version 330 core
-
-		in vec2 textureCoord;
-
-		out vec4 fragColor;
-
-		uniform sampler2D textures0;
-		uniform sampler2D textures1;
-		uniform sampler2D textures2;
-		uniform sampler2D textures3;
-		uniform sampler2D textures4;
-		uniform sampler2D textures5;
-		uniform sampler2D textures6;
-		uniform sampler2D textures7;
-
-		uniform int numTextures;
-
-		void main() {
-			vec4 finalColor = vec4(1.0);
-			
-			if (numTextures > 0){
-				finalColor *= texture(textures0, textureCoord);
-			}
-			if (numTextures > 1){
-				finalColor *= texture(textures1, textureCoord);
-			}
-			if (numTextures > 2){
-				finalColor *= texture(textures2, textureCoord);
-			}
-			if (numTextures > 3){
-				finalColor *= texture(textures3, textureCoord);
-			}
-			if (numTextures > 4){
-				finalColor *= texture(textures4, textureCoord);
-			}
-			if (numTextures > 5){
-				finalColor *= texture(textures5, textureCoord);
-			}
-			if (numTextures > 6){
-				finalColor *= texture(textures6, textureCoord);
-			}
-			if (numTextures > 7){
-				finalColor *= texture(textures7, textureCoord);
-			}
-
-			fragColor = finalColor;
-		}
-		)"
 	};
 
-	std::string get_file_contents(const char* filename)
-	{
+	bool readFile(const std::string& filename, std::string& content) {
 		std::ifstream file(filename);
 
 		if (!file.is_open()) {
-			std::cerr << "Error opening file: " << filename << std::endl;
-			return ""; 
+			std::cerr << "Unable to open the file: " << filename << std::endl;
+			return false;
 		}
 
 		std::stringstream buffer;
 		buffer << file.rdbuf();
-		return buffer.str();
+		content = buffer.str();
+
+		file.close();
+
+		return true;
 	}
 
 	void ShaderLog(unsigned int shader)
@@ -130,11 +71,16 @@ class Painter {
 	}
 
 	void InitShader() {
+		std::string content;
+		const char* cstrContent;
+
 		GLuint vShaders[shadersNumber];
 
+		readFile("shaders/shader.vert", content);
+		cstrContent = content.c_str();
 		for (int i = 0; i < shadersNumber; i++) {
 			vShaders[i] = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(vShaders[i], 1, &(VertexShaderSource[i]), NULL);
+			glShaderSource(vShaders[i], 1, &cstrContent, NULL);
 
 			glCompileShader(vShaders[i]);
 			std::cout << "vertex shader" << i << std::endl;
@@ -143,9 +89,12 @@ class Painter {
 
 		GLuint fShaders[shadersNumber];
 
+		readFile("shaders/shader.frag", content);
+		cstrContent = content.c_str();
+
 		for (int i = 0; i < shadersNumber; i++) {
 			fShaders[i] = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(fShaders[i], 1, &(FragShaderSources[i]), NULL);
+			glShaderSource(fShaders[i], 1, &cstrContent, NULL);
 			glCompileShader(fShaders[i]);
 			std::cout << "fragment shader" << i << std::endl;
 			ShaderLog(fShaders[i]);
@@ -233,17 +182,19 @@ public:
 
 	void Draw() {
 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+
 		glUseProgram(Programs[0]);
 		
 		if (state.platform != nullptr) {
 			glm::mat4 platformMat = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f));
-			(state.platform->Draw(Programs[0], platformMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.platform->Draw(Programs[0], platformMat,  state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.lizardMk != nullptr) {
 			glm::mat4 lizardMkMat = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 0.15f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(15), glm::vec3(0.0f, 1.0f, 0.0f));
-			(state.lizardMk->Draw(Programs[0], lizardMkMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.lizardMk->Draw(Programs[0], lizardMkMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.kazak != nullptr) {
@@ -252,7 +203,7 @@ public:
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(0.0f, -1.0f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f)) 
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.28f));
-			(state.kazak->Draw(Programs[0], kazakMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.kazak->Draw(Programs[0], kazakMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.gun != nullptr) {
@@ -262,25 +213,25 @@ public:
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(60), glm::vec3(0.0f, 0.0f, 1.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(180), glm::vec3(-1.0f, 0.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.70f));
-			(state.gun->Draw(Programs[0], gunMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.gun->Draw(Programs[0], gunMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.table != nullptr) {
 			glm::mat4 tableMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.17f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f));
-			(state.table->Draw(Programs[0], tableMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.table->Draw(Programs[0], tableMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.coffee != nullptr) {
 			glm::mat4 coffeeMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.15f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.003f));
-			(state.coffee->Draw(Programs[0], coffeeMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.coffee->Draw(Programs[0], coffeeMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.test != nullptr) {
 			glm::mat4 testMat = glm::mat4(1.0f);
-			(state.test->Draw(Programs[0], testMat, state.camera.getViewMatrix(), state.camera.getProjectionMatrix()));
+			(state.test->Draw(Programs[0], testMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 		glUseProgram(0);
 	}

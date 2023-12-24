@@ -5,8 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 
-#include "painter_state.h"
-
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -20,13 +18,20 @@
 #include <iostream>;
 #include <vector>
 
+#include "camera.h";
+#include "light_sources.h"
+
 struct ObjVertex {
 	glm::vec3 coords;
+	glm::vec3 color;
 	glm::vec2 textCoords;
+	glm::vec3 normal;
 
-	ObjVertex(aiVector3D aiCoords, aiVector3D aiTextCoords) :
+	ObjVertex(aiVector3D aiCoords, aiColor3D color, aiVector3D aiTextCoords, aiVector3D normal) :
 		coords(aiCoords.x, aiCoords.y, aiCoords.z),
-		textCoords(aiTextCoords.x, aiTextCoords.y) 
+		color(color.r, color.g, color.b),
+		textCoords(aiTextCoords.x, aiTextCoords.y),
+		normal(normal.x, normal.y, normal.z)
 	{}
 };
 
@@ -74,9 +79,17 @@ class Mesh {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ObjVertex), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
-		// textCoords
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ObjVertex), (GLvoid*)offsetof(ObjVertex, textCoords));
+		// color
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ObjVertex), (GLvoid*)offsetof(ObjVertex, color));
 		glEnableVertexAttribArray(1);
+
+		// textCoords
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ObjVertex), (GLvoid*)offsetof(ObjVertex, textCoords));
+		glEnableVertexAttribArray(2);
+
+		// normals
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ObjVertex), (GLvoid*)offsetof(ObjVertex, normal));
+		glEnableVertexAttribArray(3);
 
 		glBindVertexArray(0);
 	}
@@ -96,9 +109,18 @@ public:
 				textures.push_back(textureID);
 			}
 		}
-			
+
+		aiColor3D color(1.f, 1.f, 1.f);
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+
 		for (GLuint i = 0; i < mesh->mNumVertices; ++i) {
-			ObjVertex vertex(mesh->mVertices[i], mesh->mTextureCoords[0][i]);
+
+			ObjVertex vertex(
+				mesh->mVertices[i],
+				color,
+				mesh->mTextureCoords[0][i],
+				mesh->mNormals[i]
+			);
 			vertices.push_back(vertex);
 		}
 
@@ -113,7 +135,7 @@ public:
 	}
 
 
-	void Draw(const GLuint& shaderId, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
+	void Draw(const GLuint& shaderId, const glm::mat4& model, const Camera& camera, const PointSource& pSource, const SpotlightSource& sSource, const DirectionalSource& dSource) {
 		glUniform1i(glGetUniformLocation(shaderId, "numTextures"), textures.size());
 
 		for (int i = 0; i < textures.size(); ++i) {
@@ -122,10 +144,26 @@ public:
 			glUniform1i(glGetUniformLocation(shaderId, ("textures" + std::to_string(i)).c_str()), i);
 		}
 
+		glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 		glBindVertexArray(VAO);
 		glUniformMatrix4fv(glGetUniformLocation(shaderId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(shaderId, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shaderId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "view"), 1, GL_FALSE, glm::value_ptr(camera.getViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(shaderId, "projection"), 1, GL_FALSE, glm::value_ptr(camera.getProjectionMatrix()));
+
+		glUniform4f(glGetUniformLocation(shaderId, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+		glUniform3f(glGetUniformLocation(shaderId, "camPos"), camera.position.x, camera.position.y, camera.position.z);
+
+		glUniform1f(glGetUniformLocation(shaderId, "pSource.intensity"), pSource.intensity);
+		glUniform3fv(glGetUniformLocation(shaderId, "pSource.pos"), 1, glm::value_ptr(pSource.pos));
+
+		glUniform1f(glGetUniformLocation(shaderId, "sSource.intensity"), sSource.intensity);
+		glUniform3fv(glGetUniformLocation(shaderId, "sSource.pos"), 1, glm::value_ptr(sSource.pos));
+		glUniform3fv(glGetUniformLocation(shaderId, "sSource.direction"), 1, glm::value_ptr(sSource.direction));
+		glUniform1f(glGetUniformLocation(shaderId, "sSource.cone"), sSource.cone);
+
+		glUniform1f(glGetUniformLocation(shaderId, "dSource.intensity"), dSource.intensity);
+		glUniform3fv(glGetUniformLocation(shaderId, "dSource.direction"), 1, glm::value_ptr(dSource.direction));
 
 		glDrawElements(GL_TRIANGLES, static_cast<GLuint>(indices.size()), GL_UNSIGNED_INT, 0);
 
@@ -155,9 +193,9 @@ public:
 		}
 	}
 
-	void Draw(const GLuint& shaderId, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
+	void Draw(const GLuint& shaderId, const glm::mat4& model, const Camera& camera, const PointSource& pSource, const SpotlightSource& sSource, const DirectionalSource& dSource) {
 		for (int i = 0; i < meshes.size(); ++i) {
-			meshes[i].Draw(shaderId, model, view, projection);
+			meshes[i].Draw(shaderId, model, camera, pSource, sSource, dSource);
 		}
 	}
 };

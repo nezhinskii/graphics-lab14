@@ -24,11 +24,11 @@ public:
         updateCameraVectors();
     }
 
-    glm::mat4 getViewMatrix() {
+    glm::mat4 getViewMatrix() const {
         return glm::lookAt(position, position + front, up);
     }
 
-    glm::mat4 getProjectionMatrix() {
+    glm::mat4 getProjectionMatrix() const {
         return glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
     }
 
@@ -61,9 +61,10 @@ public:
             pitch = -89.0f;
         updateCameraVectors();
     }
+    glm::vec3 position;
 
 private:
-    glm::vec3 position, front, up, right, worldUp;
+    glm::vec3 front, up, right, worldUp;
     GLfloat yaw, pitch, speed, sensitivity, aspectRatio, fov, nearPlane, farPlane;
 
     void updateCameraVectors() {

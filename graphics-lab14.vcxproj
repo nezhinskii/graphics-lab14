@@ -137,6 +137,7 @@
     <ClInclude Include="lib\ImGuiFileDialog\ImGuiFileDialog.h" />
     <ClInclude Include="lib\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
     <ClInclude Include="lib\stb_image.h" />
+    <ClInclude Include="light_sources.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="painter.h" />
     <ClInclude Include="painter_state.h" />

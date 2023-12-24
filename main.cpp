@@ -48,37 +48,47 @@ void modelPickerWidget(std::string title, std::string* path, Model*& model) {
 
 void floatPicker(GLfloat* val, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
-	ImGui::DragFloat(("##" + nameSpace).c_str(), val);
+	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val);
 }
 
 void vectorPicker(glm::vec3* vec, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
-	ImGui::DragFloat(("X##"+label+nameSpace).c_str(), &(vec->x));
+	ImGui::DragFloat(("X##" + label + nameSpace).c_str(), &(vec->x));
 	ImGui::DragFloat(("Y##" + label + nameSpace).c_str(), &(vec->y));
 	ImGui::DragFloat(("Z##" + label + nameSpace).c_str(), &(vec->z));
+}
+
+void intencityPicker(GLfloat* val, std::string label, std::string nameSpace) {
+	ImGui::Text(label.c_str());
+	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 0.01, 0, 1);
+}
+
+void conePicker(GLfloat* val, std::string label, std::string nameSpace) {
+	ImGui::Text(label.c_str());
+	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 0, 5, 360);
 }
 
 
 void pointSourceEditor(GLfloat* intensity, glm::vec3* pos) {
 	if (ImGui::CollapsingHeader("Point source")) {
-		floatPicker(intensity, "Intensity", "pointSource");
+		intencityPicker(intensity, "Intensity", "pointSource");
 		vectorPicker(pos, "Position", "pointSource");
 	}
 }
 
 void directionalSourceEditor(GLfloat* intensity, glm::vec3* direction) {
 	if (ImGui::CollapsingHeader("Directional source")) {
-		floatPicker(intensity, "Intensity", "directionalSource");
+		intencityPicker(intensity, "Intensity", "directionalSource");
 		vectorPicker(direction, "Direction", "directionalSource");
 	}
 }
 
 void spotlightSourceEditor(GLfloat* intensity, glm::vec3* pos, glm::vec3* direction, GLfloat* cone) {
 	if (ImGui::CollapsingHeader("Spotlight source")) {
-		floatPicker(intensity, "Direction", "spotlightSource");
+		intencityPicker(intensity, "Intensity", "spotlightSource");
 		vectorPicker(pos, "Position", "spotlightSource");
 		vectorPicker(direction, "Direction", "spotlightSource");
-		floatPicker(cone, "Cone", "spotlightSource");
+		conePicker(cone, "Cone", "spotlightSource");
 	}
 }
 
@@ -90,6 +100,12 @@ void shadingPicker(std::string title, int* picked) {
 	}
 }
 
+std::string vec3ToStr(glm::vec3 vec3) {
+	return "(" +
+		std::to_string(vec3.x) + ", " +
+		std::to_string(vec3.y) + ", " +
+		std::to_string(vec3.z) + ")";
+}
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Lab 13", sf::Style::Default, sf::ContextSettings(24));
@@ -175,12 +191,15 @@ int main() {
 
 		ImGui::Begin("Lab 14");
 
-		pointSourceEditor(&state.pointSource.intensity, &state.pointSource.pos);
-		directionalSourceEditor(&state.directionalSource.intensity, &state.directionalSource.direction);
-		spotlightSourceEditor(&state.spotlightSource.intensity, &state.spotlightSource.pos, &state.spotlightSource.direction, &state.spotlightSource.cone);
+		ImGui::Text("Camera position:");
+		ImGui::Text(vec3ToStr(painter.state.camera.position).c_str());
 
-		shadingPicker("Cossak", &state.shadings["Cossak"]);
-		shadingPicker("LizardMK1", &state.shadings["LizardMK1"]);
+		pointSourceEditor(&painter.state.pointSource.intensity, &painter.state.pointSource.pos);
+		directionalSourceEditor(&painter.state.directionalSource.intensity, &painter.state.directionalSource.direction);
+		spotlightSourceEditor(&painter.state.spotlightSource.intensity, &painter.state.spotlightSource.pos, &painter.state.spotlightSource.direction, &painter.state.spotlightSource.cone);
+
+		shadingPicker("Cossak", &painter.state.shadings["Cossak"]);
+		shadingPicker("LizardMK1", &painter.state.shadings["LizardMK1"]);
 
 		modelPickerWidget("Pick central model", &painter.state.path, painter.state.test);
 
