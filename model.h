@@ -35,6 +35,22 @@ struct ObjVertex {
 	{}
 };
 
+struct Material {
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	glm::vec3 emission;
+	GLfloat shininess;
+	Material(aiColor3D ambient, aiColor3D diffuse, aiColor3D specular, aiColor3D emission, GLfloat shininess) :
+		ambient(ambient.r, ambient.g, ambient.b),
+		diffuse(diffuse.r, diffuse.g, diffuse.b),
+		specular(specular.r, specular.g, specular.b),
+		emission(emission.r, emission.g, emission.b),
+		shininess(shininess)
+	{}
+	Material(){}
+};
+
 class Mesh {
 	std::vector<ObjVertex> vertices;
 	std::vector<GLuint> indices;
@@ -94,11 +110,34 @@ class Mesh {
 		glBindVertexArray(0);
 	}
 
+	GLfloat deegressToRadians(GLfloat deegres) {
+		return deegres * 3.141592f / 180.0f;
+	}
+
 public:
 	GLuint VAO;
+	Material material;
 
 	Mesh(aiMesh* mesh, aiMaterial*  material, const std::string& modelDirectory) {
-		material->mProperties;
+		aiColor3D ambient(0.15f, 0.15f, 0.15f);
+		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+		aiColor3D diffuse(0.8f, 0.8f, 0.8f);
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+		aiColor3D specular(0.6f, 0.6f, 0.6f);
+		material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+		aiColor3D emission(0.f, 0.f, 0.f);
+		material->Get(AI_MATKEY_COLOR_EMISSIVE, emission);
+		GLfloat shininess = 16.f;
+		material->Get(AI_MATKEY_SHININESS, shininess);
+		std::cout << "=-------------------------------------------------------" << std::endl;
+		std::cout << "ambient " << ambient.r << ambient.g << ambient.b << std::endl;
+		std::cout << "diffuse " << diffuse.r << diffuse.g << diffuse.b << std::endl;
+		std::cout << "specular " << specular.r << specular.g << specular.b << std::endl;
+		std::cout << "emission " << emission.r << emission.g << emission.b << std::endl;
+		std::cout << "shininess " << shininess << std::endl;
+		Material mat(ambient, diffuse, specular, emission, shininess);
+		this->material = mat;
+
 		for (GLuint j = 0; j < AI_TEXTURE_TYPE_MAX; ++j) {
 			aiTextureType textureType = static_cast<aiTextureType>(j);
 			aiString texturePath;
@@ -154,13 +193,21 @@ public:
 		glUniform4f(glGetUniformLocation(shaderId, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 		glUniform3f(glGetUniformLocation(shaderId, "camPos"), camera.position.x, camera.position.y, camera.position.z);
 
+		glUniform3fv(glGetUniformLocation(shaderId, "material.ambient"), 1, glm::value_ptr(material.ambient));
+		glUniform3fv(glGetUniformLocation(shaderId, "material.diffuse"), 1, glm::value_ptr(material.diffuse));
+		glUniform3fv(glGetUniformLocation(shaderId, "material.specular"), 1, glm::value_ptr(material.specular));
+		glUniform3fv(glGetUniformLocation(shaderId, "material.emission"), 1, glm::value_ptr(material.emission));
+		glUniform1f(glGetUniformLocation(shaderId, "material.shininess"), material.shininess);
+
 		glUniform1f(glGetUniformLocation(shaderId, "pSource.intensity"), pSource.intensity);
 		glUniform3fv(glGetUniformLocation(shaderId, "pSource.pos"), 1, glm::value_ptr(pSource.pos));
 
+		auto spotDir = glm::normalize(sSource.viewPoint - sSource.pos);
 		glUniform1f(glGetUniformLocation(shaderId, "sSource.intensity"), sSource.intensity);
 		glUniform3fv(glGetUniformLocation(shaderId, "sSource.pos"), 1, glm::value_ptr(sSource.pos));
-		glUniform3fv(glGetUniformLocation(shaderId, "sSource.direction"), 1, glm::value_ptr(sSource.direction));
-		glUniform1f(glGetUniformLocation(shaderId, "sSource.cone"), sSource.cone);
+		glUniform3fv(glGetUniformLocation(shaderId, "sSource.direction"), 1, glm::value_ptr(spotDir));
+		glUniform1f(glGetUniformLocation(shaderId, "sSource.cone"), glm::cos(deegressToRadians(sSource.cone)));
+		glUniform1f(glGetUniformLocation(shaderId, "sSource.outerCone"), glm::cos(deegressToRadians(sSource.cone * 1.05)));
 
 		glUniform1f(glGetUniformLocation(shaderId, "dSource.intensity"), dSource.intensity);
 		glUniform3fv(glGetUniformLocation(shaderId, "dSource.direction"), 1, glm::value_ptr(dSource.direction));
@@ -173,8 +220,9 @@ public:
 };
 
 class Model {
-	std::vector<Mesh> meshes;
+	
 public:
+	std::vector<Mesh> meshes;
 	Model(const std::string& path) {
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);

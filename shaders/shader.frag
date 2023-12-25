@@ -20,6 +20,14 @@ uniform int numTextures;
 uniform vec4 lightColor;
 uniform vec3 camPos;
 
+uniform struct Material {
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	vec3 emission;
+	float shininess;
+} material; 
+
 struct PointSource {
 	float intensity;
 	vec3 pos;
@@ -30,6 +38,7 @@ struct SpotlightSource {
 	vec3 pos;
 	vec3 direction;
 	float cone;
+	float outerCone;
 };
 
 struct DirectionalSource {
@@ -48,7 +57,7 @@ void pointLight(inout float diffSum, inout float specSum)
 
 	// intensity of light with respect to distance
 	float dist = length(lightVec);
-	float a = 3.0;
+	float a = 2.0;
 	float b = 0.7;
 	float inten = pSource.intensity / (a * dist * dist + b * dist + 1.0f);
 
@@ -61,7 +70,7 @@ void pointLight(inout float diffSum, inout float specSum)
 	float specularLight = 0.50f;
 	vec3 viewDirection = normalize(camPos - positionOut);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
+	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
 	float specular = specAmount * specularLight;
 
 	diffSum += diffuse * inten;
@@ -70,10 +79,6 @@ void pointLight(inout float diffSum, inout float specSum)
 
 void spotLight(inout float diffSum, inout float specSum)
 {
-	// controls how big the area that is lit up is
-	float outerCone = sSource.cone;
-	float innerCone = sSource.cone * 0.95f;
-
 	// diffuse lighting
 	vec3 normal = normalize(normalOut);
 	vec3 lightDirection = normalize(sSource.pos - positionOut);
@@ -88,7 +93,7 @@ void spotLight(inout float diffSum, inout float specSum)
 
 	// calculates the intensity of the positionOut based on its angle to the center of the light cone
 	float angle = dot(sSource.direction, -lightDirection);
-	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+	float inten = clamp((angle - sSource.outerCone) / (sSource.cone - sSource.outerCone), 0.0f, 1.0f);
 
 	diffSum += diffuse * inten * sSource.intensity;
 	specSum += specular * inten * sSource.intensity;
@@ -152,5 +157,5 @@ void main() {
 	spotLight(diffSum, specSum);
 	direcLight(diffSum, specSum);	
 
-	fragColor = (texture(textures0, texCoordOut) * (diffSum + ambient) + texture(textures1, texCoordOut).r * specSum) * lightColor;
+	fragColor = (texture(textures0, texCoordOut) * (material.diffuse.x * diffSum + material.ambient.x) + texture(textures1, texCoordOut).r * material.specular.x * specSum) * lightColor;
 }

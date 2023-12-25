@@ -34,11 +34,6 @@ class Painter {
 
 	const static GLuint shadersNumber = 1;
 
-	const char* VertexShaderSource[shadersNumber] = {
-	};
-
-	const char* FragShaderSources[shadersNumber] = {
-	};
 
 	bool readFile(const std::string& filename, std::string& content) {
 		std::ifstream file(filename);
@@ -197,13 +192,11 @@ public:
 			(state.lizardMk->Draw(Programs[0], lizardMkMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
-		if (state.kazak != nullptr) {
-			glm::mat4 kazakMat = 
-				glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 1.2f, 0.0f))
+		if (state.warrior != nullptr) {
+			glm::mat4 warriorMat = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.15f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(0.0f, -1.0f, 0.0f))
-				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f)) 
-				* glm::scale(glm::mat4(1.0f), glm::vec3(0.28f));
-			(state.kazak->Draw(Programs[0], kazakMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+				* glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+			(state.warrior->Draw(Programs[0], warriorMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.gun != nullptr) {
@@ -217,22 +210,18 @@ public:
 		}
 
 		if (state.table != nullptr) {
-			glm::mat4 tableMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.17f, 0.0f))
-				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f));
+			glm::mat4 tableMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.15f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(1.35f));
 			(state.table->Draw(Programs[0], tableMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
 		if (state.coffee != nullptr) {
-			glm::mat4 coffeeMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.15f, 0.0f))
+			glm::mat4 coffeeMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.22f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.003f));
 			(state.coffee->Draw(Programs[0], coffeeMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
 		}
 
-		if (state.test != nullptr) {
-			glm::mat4 testMat = glm::mat4(1.0f);
-			(state.test->Draw(Programs[0], testMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
-		}
 		glUseProgram(0);
 	}
 

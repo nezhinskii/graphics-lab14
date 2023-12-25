@@ -21,8 +21,8 @@ struct DirectionalSource : LightSource {
 
 struct SpotlightSource : LightSource {
 	glm::vec3 pos;
-	glm::vec3 direction;
+	glm::vec3 viewPoint;
 	GLfloat cone;
 
-	SpotlightSource(GLfloat intensity, glm::vec3 pos, glm::vec3 direction, GLfloat cone) : pos(pos), direction(direction), cone(cone), LightSource(intensity) {}
+	SpotlightSource(GLfloat intensity, glm::vec3 pos, glm::vec3 direction, GLfloat cone) : pos(pos), viewPoint(direction), cone(cone), LightSource(intensity) {}
 };

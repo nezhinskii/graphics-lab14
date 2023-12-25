@@ -24,7 +24,7 @@ public:
 
 	Model* platform = nullptr;
 	Model* lizardMk = nullptr;
-	Model* kazak = nullptr;
+	Model* warrior = nullptr;
 	Model* gun = nullptr;
 	Model* table = nullptr;
 	Model* coffee = nullptr;
@@ -32,7 +32,7 @@ public:
 	Model* test = nullptr;
 
 	PointSource pointSource = PointSource(1.0f, glm::vec3(0,0,0));
-	DirectionalSource directionalSource = DirectionalSource(1.0f, glm::vec3(1, 1, 1));
+	DirectionalSource directionalSource = DirectionalSource(1.0f, glm::vec3(0, 100, 100));
 	SpotlightSource spotlightSource = SpotlightSource(1.0f, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 45.0f);
 
 	std::unordered_map<std::string, int> shadings = std::unordered_map<std::string, int>();

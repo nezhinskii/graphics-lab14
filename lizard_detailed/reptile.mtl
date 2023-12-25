@@ -1,12 +1,18 @@
 newmtl Model001_Material001
+Ka 0.35 0.35 0.35
+Kd 1.0 1.0 1.0
 map_Kd reptile_b2_diff.png
 map_bump eyes_bump.png
 
 newmtl Model001_Material002
+Ka 0.35 0.35 0.35
+Kd 1.0 1.0 1.0
 map_Kd reptile_b1_diff.png
 map_bump reptile_b1_norm.png
 
 newmtl Model001_Material003
+Ka 0.35 0.35 0.35
+Kd 1.0 1.0 1.0
 map_Kd reptile_b1_diff.png
 map_bump reptile_b1_norm.png
 

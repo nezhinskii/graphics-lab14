@@ -48,14 +48,14 @@ void modelPickerWidget(std::string title, std::string* path, Model*& model) {
 
 void floatPicker(GLfloat* val, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
-	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val);
+	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 0.1F);
 }
 
 void vectorPicker(glm::vec3* vec, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
-	ImGui::DragFloat(("X##" + label + nameSpace).c_str(), &(vec->x));
-	ImGui::DragFloat(("Y##" + label + nameSpace).c_str(), &(vec->y));
-	ImGui::DragFloat(("Z##" + label + nameSpace).c_str(), &(vec->z));
+	ImGui::DragFloat(("X##" + label + nameSpace).c_str(), &(vec->x), 0.1F);
+	ImGui::DragFloat(("Y##" + label + nameSpace).c_str(), &(vec->y), 0.1F);
+	ImGui::DragFloat(("Z##" + label + nameSpace).c_str(), &(vec->z), 0.1F);
 }
 
 void intencityPicker(GLfloat* val, std::string label, std::string nameSpace) {
@@ -65,7 +65,7 @@ void intencityPicker(GLfloat* val, std::string label, std::string nameSpace) {
 
 void conePicker(GLfloat* val, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
-	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 0, 5, 360);
+	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 1.0, 0.1, 180);
 }
 
 
@@ -87,7 +87,7 @@ void spotlightSourceEditor(GLfloat* intensity, glm::vec3* pos, glm::vec3* direct
 	if (ImGui::CollapsingHeader("Spotlight source")) {
 		intencityPicker(intensity, "Intensity", "spotlightSource");
 		vectorPicker(pos, "Position", "spotlightSource");
-		vectorPicker(direction, "Direction", "spotlightSource");
+		vectorPicker(direction, "View point", "spotlightSource");
 		conePicker(cone, "Cone", "spotlightSource");
 	}
 }
@@ -120,11 +120,18 @@ int main() {
 
 	painter.Init();
 	painter.state.platform = new Model(currentPath.string() + "\\platform\\scene.gltf");
-	painter.state.kazak = new Model(currentPath.string() + "\\kazak\\scene.gltf");
+	//painter.state.warrior = new Model(currentPath.string() + "\\warrior\\scene.gltf");
 	painter.state.lizardMk = new Model(currentPath.string() + "\\lizard_detailed\\reptile.obj");
 	painter.state.gun = new Model(currentPath.string() + "\\gun\\Gun.obj");
 	painter.state.table = new Model(currentPath.string() + "\\table\\scene.gltf");
 	painter.state.coffee = new Model(currentPath.string() + "\\coffee\\scene.gltf");
+
+	// delete some excess meshes
+	/*painter.state.warrior->meshes.erase(painter.state.warrior->meshes.begin());
+	painter.state.warrior->meshes.erase(painter.state.warrior->meshes.begin());
+	painter.state.warrior->meshes.erase(painter.state.warrior->meshes.begin());
+	painter.state.warrior->meshes.erase(painter.state.warrior->meshes.begin());
+	painter.state.warrior->meshes.erase(painter.state.warrior->meshes.begin());*/
 
 	GLboolean firstMouse = true;
 	GLfloat lastX = 0, lastY = 0;
@@ -196,7 +203,7 @@ int main() {
 
 		pointSourceEditor(&painter.state.pointSource.intensity, &painter.state.pointSource.pos);
 		directionalSourceEditor(&painter.state.directionalSource.intensity, &painter.state.directionalSource.direction);
-		spotlightSourceEditor(&painter.state.spotlightSource.intensity, &painter.state.spotlightSource.pos, &painter.state.spotlightSource.direction, &painter.state.spotlightSource.cone);
+		spotlightSourceEditor(&painter.state.spotlightSource.intensity, &painter.state.spotlightSource.pos, &painter.state.spotlightSource.viewPoint, &painter.state.spotlightSource.cone);
 
 		shadingPicker("Cossak", &painter.state.shadings["Cossak"]);
 		shadingPicker("LizardMK1", &painter.state.shadings["LizardMK1"]);
