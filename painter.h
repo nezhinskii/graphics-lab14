@@ -30,9 +30,9 @@ using namespace sf;
 
 class Painter {
 
-	GLuint Programs[1];
+	const static GLuint shadersNumber = 3;
 
-	const static GLuint shadersNumber = 1;
+	GLuint Programs[shadersNumber];
 
 
 	bool readFile(const std::string& filename, std::string& content) {
@@ -84,10 +84,10 @@ class Painter {
 
 		GLuint fShaders[shadersNumber];
 
-		readFile("shaders/shader.frag", content);
-		cstrContent = content.c_str();
-
 		for (int i = 0; i < shadersNumber; i++) {
+			readFile("shaders/shader" + std::to_string(i + 1) + ".frag", content);
+			std::cout << "shaders/shader" + std::to_string(i + 1) + ".frag" << std::endl;
+			cstrContent = content.c_str();
 			fShaders[i] = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(fShaders[i], 1, &cstrContent, NULL);
 			glCompileShader(fShaders[i]);
@@ -178,28 +178,43 @@ public:
 	void Draw() {
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
-
-		glUseProgram(Programs[0]);
 		
 		if (state.platform != nullptr) {
+			glUseProgram(Programs[state.platform->shading]);
 			glm::mat4 platformMat = glm::scale(glm::mat4(1.0f), glm::vec3(0.02f));
 			(state.platform->Draw(Programs[0], platformMat,  state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
 		if (state.lizardMk != nullptr) {
+			glUseProgram(Programs[state.lizardMk->shading]);
 			glm::mat4 lizardMkMat = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 0.15f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(15), glm::vec3(0.0f, 1.0f, 0.0f));
 			(state.lizardMk->Draw(Programs[0], lizardMkMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
-		if (state.warrior != nullptr) {
+		/*if (state.warrior != nullptr) {
+			glUseProgram(Programs[state.warrior->shading]);
 			glm::mat4 warriorMat = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.15f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(0.0f, -1.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 			(state.warrior->Draw(Programs[0], warriorMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
+		}*/
+
+		if (state.warrior != nullptr) {
+			glUseProgram(Programs[state.warrior->shading]);
+			glm::mat4 warriorMat = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 1.2f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(0.0f, -1.0f, 0.0f))
+				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f))
+				* glm::scale(glm::mat4(1.0f), glm::vec3(0.28f));
+			(state.warrior->Draw(Programs[0], warriorMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
 		if (state.gun != nullptr) {
+			glUseProgram(Programs[state.gun->shading]);
 			glm::mat4 gunMat = glm::translate(glm::mat4(1.0f), glm::vec3(-2.53f, 0.89f, 0.40f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(-18), glm::vec3(1.0f, 0.0f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(-15), glm::vec3(0.0f, 1.0f, 0.0f))
@@ -207,19 +222,24 @@ public:
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(180), glm::vec3(-1.0f, 0.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.70f));
 			(state.gun->Draw(Programs[0], gunMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
 		if (state.table != nullptr) {
+			glUseProgram(Programs[state.table->shading]);
 			glm::mat4 tableMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.15f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(1.35f));
 			(state.table->Draw(Programs[0], tableMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
 		if (state.coffee != nullptr) {
+			glUseProgram(Programs[state.coffee->shading]);
 			glm::mat4 coffeeMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.22f, 0.0f))
 				* glm::rotate(glm::mat4(1.0f), deegressToRadians(90), glm::vec3(-1.0f, 0.0f, 0.0f))
 				* glm::scale(glm::mat4(1.0f), glm::vec3(0.003f));
 			(state.coffee->Draw(Programs[0], coffeeMat, state.camera, state.pointSource, state.spotlightSource, state.directionalSource));
+			glUseProgram(0);
 		}
 
 		glUseProgram(0);

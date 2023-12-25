@@ -143,7 +143,9 @@
     <ClInclude Include="painter_state.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader.frag" />
+    <None Include="shader2.frag" />
+    <None Include="shader3.frag" />
+    <None Include="shaders\shader1.frag" />
     <None Include="shaders\shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

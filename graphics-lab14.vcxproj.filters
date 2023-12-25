@@ -44,12 +44,21 @@
     <ClInclude Include="lib\ImGuiFileDialog\ImGuiFileDialogConfig.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="light_sources.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\shader.frag">
+    <None Include="shaders\shader1.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="shaders\shader.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="shader2.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="shader3.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

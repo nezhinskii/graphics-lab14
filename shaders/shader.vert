@@ -28,5 +28,5 @@ void main() {
 
 	texCoordOut = texCoord;
 
-	normalOut = (model * vec4(normal,1.0f)).xyz;
+	normalOut = mat3(transpose(inverse(model))) * normal;
 }

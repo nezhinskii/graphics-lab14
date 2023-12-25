@@ -119,7 +119,7 @@ public:
 	Material material;
 
 	Mesh(aiMesh* mesh, aiMaterial*  material, const std::string& modelDirectory) {
-		aiColor3D ambient(0.15f, 0.15f, 0.15f);
+		aiColor3D ambient(0.10f, 0.10f, 0.10f);
 		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
 		aiColor3D diffuse(0.8f, 0.8f, 0.8f);
 		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
@@ -219,9 +219,16 @@ public:
 	}
 };
 
+
+enum Shading : int {
+	Phong,
+	Toon,
+	Rim
+};
+
 class Model {
-	
 public:
+	int shading = (int)Shading::Phong;
 	std::vector<Mesh> meshes;
 	Model(const std::string& path) {
 		Assimp::Importer importer;

@@ -19,33 +19,6 @@
 
 using namespace sf;
 
-void modelPickerWidget(std::string title, std::string* path, Model*& model) {
-	if (ImGui::Button(title.c_str()))
-		ImGuiFileDialog::Instance()->OpenDialog(title.c_str(), "Choose object", ".obj,.fbx,.gltf,.gitf", ".");
-	if ((*path).empty()) {
-		ImGui::Text("Empty");
-	}
-	else {
-		ImGui::Text((*path).c_str());
-	}
-
-
-
-	if (ImGuiFileDialog::Instance()->Display(title.c_str()))
-	{
-		if (ImGuiFileDialog::Instance()->IsOk())
-		{
-			std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-			(*path) = filePathName;
-			model = new Model(filePathName);
-		}
-		else {
-			(*path).clear();
-		}
-		ImGuiFileDialog::Instance()->Close();
-	}
-}
-
 void floatPicker(GLfloat* val, std::string label, std::string nameSpace) {
 	ImGui::Text(label.c_str());
 	ImGui::DragFloat(("##" + label + nameSpace).c_str(), val, 0.1F);
@@ -96,7 +69,7 @@ void shadingPicker(std::string title, int* picked) {
 	if (ImGui::CollapsingHeader(title.c_str())) {
 		ImGui::RadioButton(("Phong##" + title).c_str(), picked, Shading::Phong);
 		ImGui::RadioButton(("Toon##" + title).c_str(), picked, Shading::Toon);
-		ImGui::RadioButton(("Other##" + title).c_str(), picked, Shading::Other);
+		ImGui::RadioButton(("Rim##" + title).c_str(), picked, Shading::Rim);
 	}
 }
 
@@ -120,7 +93,7 @@ int main() {
 
 	painter.Init();
 	painter.state.platform = new Model(currentPath.string() + "\\platform\\scene.gltf");
-	//painter.state.warrior = new Model(currentPath.string() + "\\warrior\\scene.gltf");
+	painter.state.warrior = new Model(currentPath.string() + "\\kazak\\scene.gltf");
 	painter.state.lizardMk = new Model(currentPath.string() + "\\lizard_detailed\\reptile.obj");
 	painter.state.gun = new Model(currentPath.string() + "\\gun\\Gun.obj");
 	painter.state.table = new Model(currentPath.string() + "\\table\\scene.gltf");
@@ -205,10 +178,12 @@ int main() {
 		directionalSourceEditor(&painter.state.directionalSource.intensity, &painter.state.directionalSource.direction);
 		spotlightSourceEditor(&painter.state.spotlightSource.intensity, &painter.state.spotlightSource.pos, &painter.state.spotlightSource.viewPoint, &painter.state.spotlightSource.cone);
 
-		shadingPicker("Cossak", &painter.state.shadings["Cossak"]);
-		shadingPicker("LizardMK1", &painter.state.shadings["LizardMK1"]);
-
-		modelPickerWidget("Pick central model", &painter.state.path, painter.state.test);
+		shadingPicker("Warrior", &painter.state.warrior->shading);
+		shadingPicker("Lizard", &painter.state.lizardMk->shading);
+		shadingPicker("Gun", &painter.state.gun->shading);
+		shadingPicker("Coffee", &painter.state.coffee->shading);
+		shadingPicker("Table", &painter.state.table->shading);
+		shadingPicker("Platform", &painter.state.platform->shading);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
