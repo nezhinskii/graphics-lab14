@@ -81,7 +81,7 @@ std::string vec3ToStr(glm::vec3 vec3) {
 }
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(600, 600), "Lab 13", sf::Style::Default, sf::ContextSettings(24));
+	sf::RenderWindow window(sf::VideoMode(600, 600), "Lab 14", sf::Style::Default, sf::ContextSettings(24));
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 	window.setActive(true);

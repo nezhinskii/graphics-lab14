@@ -70,7 +70,7 @@ void pointLight(inout float diffSum, inout float specSum)
 	float specularLight = 0.50f;
 	vec3 viewDirection = normalize(camPos - positionOut);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), material.shininess);
+	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), max(material.shininess, 1));
 	float specular = specAmount * specularLight;
 
 	diffSum += diffuse * inten;
@@ -88,7 +88,7 @@ void spotLight(inout float diffSum, inout float specSum)
 	float specularLight = 0.50f;
 	vec3 viewDirection = normalize(camPos - positionOut);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
+	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), max(material.shininess, 1));
 	float specular = specAmount * specularLight;
 
 	// calculates the intensity of the positionOut based on its angle to the center of the light cone
@@ -110,7 +110,7 @@ void direcLight(inout float diffSum, inout float specSum)
     float specularLight = 0.50f;
     vec3 viewDirection = normalize(camPos - positionOut);
     vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
+    float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), max(material.shininess, 1));
     float specular = specAmount * specularLight;
 
 	diffSum += diffuse * dSource.intensity;

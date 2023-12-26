@@ -55,10 +55,10 @@
     <None Include="shaders\shader.vert">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="shader2.frag">
+    <None Include="shaders\shader3.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="shader3.frag">
+    <None Include="shaders\shader2.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

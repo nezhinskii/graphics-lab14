@@ -143,10 +143,10 @@
     <ClInclude Include="painter_state.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader2.frag" />
-    <None Include="shader3.frag" />
     <None Include="shaders\shader1.frag" />
     <None Include="shaders\shader.vert" />
+    <None Include="shaders\shader2.frag" />
+    <None Include="shaders\shader3.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
